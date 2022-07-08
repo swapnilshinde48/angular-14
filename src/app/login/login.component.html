@@ -1,0 +1,40 @@
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <div class="fadeIn first">
+      <img
+        src="http://danielzawadzki.com/codepen/01/icon.svg"
+        id="icon"
+        alt="User Icon"
+      />
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="login()">
+      <input
+        type="text"
+        id="login"
+        class="form-control"
+        name="login"
+        formControlName="username"
+        placeholder="login"
+      />
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        name="login"
+        formControlName="Password"
+        placeholder="password"
+      />
+      <input
+        [disabled]="!profileForm.valid"
+        type="submit"
+        class="fadeIn fourth"
+        value="Log In"
+      />
+      <label *ngIf="usernotloggedin">user name or password is invalid</label>
+    </form>
+    <div id="formFooter">
+      <a class="underlineHover" href="#">Forgot Password?</a>
+    </div>
+  </div>
+</div>
