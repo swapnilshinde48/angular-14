@@ -1,19 +1,20 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { DashbordComponent } from './dashbord/dashbord.component';
+import { Routes, RouterModule } from '@angular/router';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: '',
+    component: LoginComponent,
+    pathMatch: 'full',
+  },
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent },
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes), CommonModule],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-  routes: Routes = [
-    { path: '/', component: LoginComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'dashboard', component: DashbordComponent },
-  ];
-}
+export class AppRoutingModule {}

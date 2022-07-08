@@ -1,23 +1,30 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DashbordComponent } from './dashbord/dashbord.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+
 @NgModule({
-  declarations: [AppComponent, LoginComponent, DashbordComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    DashboardComponent,
+    HeaderComponent,
+    FooterComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
