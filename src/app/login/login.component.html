@@ -24,6 +24,15 @@
               >
                 please provide username
               </div>
+              <div
+                *ngIf="
+                  loginFormControl.username.touched &&
+                  loginFormControl.username.invalid
+                "
+                class="text-danger"
+              >
+                Email must be a valid email address
+              </div>
             </div>
             <div class="form-group">
               <input
