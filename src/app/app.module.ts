@@ -8,6 +8,8 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { VideoplayerComponent } from './videoplayer/videoplayer.component';
 
 @NgModule({
   declarations: [
@@ -16,12 +18,14 @@ import { CommonModule } from '@angular/common';
     DashboardComponent,
     HeaderComponent,
     FooterComponent,
+    VideoplayerComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     CommonModule,
+    HttpClientModule,
     ReactiveFormsModule,
   ],
   providers: [],

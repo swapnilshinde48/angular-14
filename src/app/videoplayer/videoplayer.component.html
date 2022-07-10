@@ -1,0 +1,17 @@
+<div class="container" style="padding: 30px">
+  <div class="col-lg-8">
+    <video
+      *ngFor="let item of viewedArr"
+      id="{{ item.id }}"
+      width="600"
+      controls
+      style="padding-left: 10px"
+      (click)="videoRead($event)"
+    >
+      <source src="{{ item.path }}" type="video/mp4" />
+      Your browser does not support HTML video.
+    </video>
+  </div>
+  <div class="col-lg-4"></div>
+</div>
+<br />
