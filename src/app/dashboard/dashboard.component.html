@@ -29,7 +29,7 @@
         style="padding-left: 10px"
         (click)="videoRead($event)"
       >
-        <source src="{{ item.path }}" type="video/mp4" />
+        <source src="{{ item.webUrl }}" type="video/mp4" />
         Your browser does not support HTML video.
       </video>
     </div>
@@ -45,7 +45,7 @@
         width="250"
         (click)="videoRead($event)"
       >
-        <source src="{{ item.path }}" type="video/mp4" />
+        <source src="{{ item.webUrl }}" type="video/mp4" />
         Your browser does not support HTML video.
       </video>
     </div>

@@ -13,17 +13,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class VideoplayerComponent implements OnInit {
   title = 'UIdeveloper';
   viewedArr = [];
-  videoArr = [
-    {
-      id: 1,
-      path: 'http://localhost:4200/assets/Pexels%20Videos%202764118.mp4',
-    },
-    {
-      id: 2,
-      path: 'http://localhost:4200/assets/production ID_4763824.mp4',
-    },
-  ];
+  videoArr = [];
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.httpService.getToken()}`,
+    }),
+  };
   Id: number;
+  files: any[];
   constructor(
     private authService: AuthService,
     private http: HttpClient,
@@ -32,7 +30,23 @@ export class VideoplayerComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.Id = this.route.snapshot.params.Id;
-    this.viewedArr.push(this.videoArr.filter((s) => s.id == this.Id)[0]);
+    this.videoArr = [];
+    this.http
+      .get<any>(
+        'https://graph.microsoft.com/v1.0/me/drive/root/children',
+        this.httpOptions
+      )
+      .subscribe((res) => {
+        this.files = res.value;
+        for (let i = 0; i < res.value.length; i++) {
+          if (!!res.value[i].file) {
+            if (res.value[i].file.mimeType == 'video/mp4')
+              this.videoArr.push(res.value[i]);
+          }
+        }
+
+        this.viewedArr.push(this.videoArr.filter((s) => s.id == this.Id)[0]);
+      });
   }
 
   ngOnInit(): void {}

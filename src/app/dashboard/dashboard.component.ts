@@ -19,16 +19,7 @@ export class DashboardComponent implements OnInit {
   title = 'UIdeveloper';
   private selectedFile: File;
   viewedArr = [];
-  videoArr = [
-    {
-      id: 1,
-      path: 'http://localhost:4200/assets/Pexels%20Videos%202764118.mp4',
-    },
-    {
-      id: 2,
-      path: 'http://localhost:4200/assets/production ID_4763824.mp4',
-    },
-  ];
+  videoArr = [];
 
   files: any[];
   subsGetUsers: Subscription;
@@ -57,6 +48,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.videoArr = [];
     this.http
       .get<any>(
         'https://graph.microsoft.com/v1.0/me/drive/root/children',
@@ -64,7 +56,12 @@ export class DashboardComponent implements OnInit {
       )
       .subscribe((res) => {
         this.files = res.value;
-        console.log(this.files);
+        for (let i = 0; i < res.value.length; i++) {
+          if (!!res.value[i].file) {
+            if (res.value[i].file.mimeType == 'video/mp4')
+              this.videoArr.push(res.value[i]);
+          }
+        }
       });
   }
   binarydata: any;
@@ -132,7 +129,6 @@ export class DashboardComponent implements OnInit {
     var fileType = file.name.substring(i + 1);
     var fileName = file.name.substring(0, i);
     this.getUploadSession(fileType, fileName).subscribe(function (data) {
-      console.log(data);
       uploadUrl = data.uploadUrl;
       homeService.uploadChunks.call(homeService, file, uploadUrl);
     });
