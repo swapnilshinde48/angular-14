@@ -10,6 +10,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { HomeService } from '../shared/home.service';
 import { catchError, map } from 'rxjs/operators';
+import { jsonpFactory } from '@angular/http/src/http_module';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -45,6 +46,14 @@ export class DashboardComponent implements OnInit {
     private homeService: HomeService
   ) {
     this.httpService.getAuthRequestOptions();
+    if (!!localStorage.getItem('viewedVideo')) {
+      this.viewedArr = JSON.parse(localStorage.getItem('viewedVideo'));
+      let uniqueArray = this.viewedArr.filter(
+        (value, index, self) =>
+          index === self.findIndex((t) => t.id === value.id)
+      );
+      this.viewedArr = uniqueArray;
+    }
   }
 
   ngOnInit(): void {
@@ -84,9 +93,19 @@ export class DashboardComponent implements OnInit {
     var myVideo: any = document.getElementById(event.target.id);
     // if (myVideo.paused) myVideo.play();
     // else myVideo.pause();
+
+    if (!!localStorage.getItem('viewedVideo')) {
+      let viewedvideArr = JSON.parse(localStorage.getItem('viewedVideo'));
+      if (viewedvideArr.filter((s) => s.id == event.target.id).length == 0) {
+        this.viewedArr.push(
+          this.videoArr.filter((s) => s.id == event.target.id)[0]
+        );
+      }
+      localStorage.setItem('viewedVideo', JSON.stringify(this.viewedArr));
+    } else localStorage.setItem('viewedVideo', JSON.stringify(this.viewedArr));
     this.router.navigateByUrl('/videoplayer/' + event.target.id);
-    //location.reload();
   }
+
   processArray(arr: any) {
     for (let i = 0; i < arr.length; i++) {
       arr[i].hashid = this.getnewHashid();
