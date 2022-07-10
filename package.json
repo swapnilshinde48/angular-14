@@ -23,6 +23,7 @@
     "hellojs": "^1.19.5",
     "onedrive-api": "^1.0.4",
     "rxjs": "~6.5.5",
+    "superagent": "^8.0.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },

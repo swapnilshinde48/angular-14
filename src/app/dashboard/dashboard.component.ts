@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { HttpService } from '../shared/http.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpClientModule,
+} from '@angular/common/http';
+import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-
+import { HomeService } from '../shared/home.service';
+import { catchError, map } from 'rxjs/operators';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -45,9 +50,9 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private http: HttpClient,
     private httpService: HttpService,
-    private router: Router
+    private router: Router,
+    private homeService: HomeService
   ) {
-    //  this.videoArr = this.processArray(this.videoArr);
     this.httpService.getAuthRequestOptions();
   }
 
@@ -65,15 +70,11 @@ export class DashboardComponent implements OnInit {
   binarydata: any;
   Upload(event) {
     this.selectedFile = event.target.files;
-    console.log(event.target.files);
     let name = event.target.files[0].name;
-    let formData = new FormData();
-    formData.append('myfile', event.target.files[0], name);
-    this.uploadDocument(name, formData);
-
+    this.onUpload(event.target.files[0]);
     const filereader = new FileReader();
     filereader.onload = async (event) => {
-      // await this.uploadDocument(name, event.target.result);
+      await this.uploadDocument(name, event.target.result);
     };
     filereader.readAsArrayBuffer(event.target.files[0]);
   }
@@ -83,7 +84,6 @@ export class DashboardComponent implements OnInit {
         this.videoArr.filter((s) => s.id == event.target.id)[0]
       );
     }
-    //  this.viewedArr = this.processArray(this.viewedArr);
     var myVideo: any = document.getElementById(event.target.id);
     // if (myVideo.paused) myVideo.play();
     // else myVideo.pause();
@@ -122,15 +122,39 @@ export class DashboardComponent implements OnInit {
     this.uploadFile(this.selectedFile, this.binarydata);
   }
   uploadDocument(name, file) {
-    console.log(name, file);
     this.binarydata = file;
   }
-  // Doesn't work
+  onUpload(files) {
+    var uploadUrl;
+    var file = files;
+    var homeService = this.homeService;
+    var i = file.name.lastIndexOf('.');
+    var fileType = file.name.substring(i + 1);
+    var fileName = file.name.substring(0, i);
+    this.getUploadSession(fileType, fileName).subscribe(function (data) {
+      console.log(data);
+      uploadUrl = data.uploadUrl;
+      homeService.uploadChunks.call(homeService, file, uploadUrl);
+    });
+  }
+  getUploadSession(fileType, name): Observable<any> {
+    const token = window.sessionStorage.getItem('accessToken');
+    const endpoint = `https://graph.microsoft.com/v1.0/me/drive/root:/${name}.${fileType}:/createUploadSession`;
+    const body = {
+      item: {
+        '@microsoft.graph.conflictBehavior': 'rename',
+      },
+    };
+    var options = this.httpService.getAuthRequestOptions();
+    return this.http.post(endpoint, body, options).pipe(
+      map((response: Response) => {
+        return response;
+      })
+    );
+  }
   uploadFile(file, binarydata) {
-    //   // this.http.put<any>('https://graph.microsoft.com/v1.0/me/drives/'+ res.id +'/items/'+file.id+'/content'
-    //   this.http.get<any>('https://graph.microsoft.com/v1.0/me/drives/'+ res.id +'/items/'+ file.id +'/content', this.httpOptions)
-    //   // this.http.put<any>('https://graph.microsoft.com/v1.0/me/drives/res.id'+'root:/Home/FileB.txt:/content', this.httpOptions)
-
+    let body = new Uint8Array(binarydata);
+    let uIntBody = body.buffer;
     this.http
       .get<any>('https://graph.microsoft.com/v1.0/me/drive', this.httpOptions)
       .subscribe((res) => {
@@ -142,23 +166,18 @@ export class DashboardComponent implements OnInit {
           file[0].name +
           ':/contents';
         this.http
-          .put<any>(url, binarydata, this.httpOptionforupload)
+          .put<any>(url, uIntBody, this.httpOptionforupload)
           .subscribe((resd) => {
             this.files = resd.value;
             console.log(this.files);
-
-            // localStorage.setItem('credential','')
           });
       });
   }
-  //this function gets called when someone click on the folder
   openFolder(file) {
     console.log(file);
-    //this will goto the main drive and gets the drive id so that we can access the sub folders using that drive id
     this.http
       .get<any>('https://graph.microsoft.com/v1.0/me/drive', this.httpOptions)
       .subscribe((res) => {
-        //here we will use the drive id and access the sub folders
         this.http
           .get<any>(
             'https://graph.microsoft.com/v1.0/me/drives/' +
