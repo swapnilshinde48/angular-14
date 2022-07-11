@@ -1,4 +1,4 @@
 export const Configs = {
-  appId: "f5769348-8408-416f-b105-196b2b8d50f8",
+  appId: "60244d3f-9a0a-4d08-9b41-486672cdaa0c",
   scope: "Contacts.Read Files.Readwrite Files.Readwrite.All",
 };
