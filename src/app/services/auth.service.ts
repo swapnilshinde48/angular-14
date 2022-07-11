@@ -17,7 +17,10 @@ export class AuthService {
           id: Configs.appId,
           oauth: {
             version: 2,
-            auth: 'https://login.microsoftonline.com/7eb0ebdd-607d-46a7-b651-220d7b418537/oauth2/v2.0/authorize',
+            auth:
+              'https://login.microsoftonline.com/' +
+              Configs.tenentId +
+              '/oauth2/v2.0/authorize',
           },
           scope_delim: ' ',
           form: false,
