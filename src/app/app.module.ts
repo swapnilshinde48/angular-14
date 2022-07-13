@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { VideoplayerComponent } from './videoplayer/videoplayer.component';
 import { HomeService } from './shared/home.service';
-
+import { NgbModule, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +28,7 @@ import { HomeService } from './shared/home.service';
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,17 +1,63 @@
 <div class="container" style="padding: 30px">
-  <div class="col-lg-8">
-    <video
-      *ngFor="let item of viewedArr"
-      id="{{ item.id }}"
-      width="600"
-      controls
-      style="padding-left: 10px"
-      (click)="videoRead($event)"
-    >
-      <source src="{{ item.webUrl }}" type="video/mp4" />
-      Your browser does not support HTML video.
-    </video>
+  <div class="row" style="border: 2px solid black">
+    <div class="col-lg-8" style="border: 2px solid black">
+      <video
+        *ngFor="let item of viewedArr"
+        id="{{ item.id }}"
+        width="500"
+        controls
+        style="padding-left: 10px"
+        (click)="videoRead($event)"
+      >
+        <source src="{{ item.webUrl }}" type="video/mp4" />
+        Your browser does not support HTML video.
+      </video>
+      <button class="btn btn-lg btn-outline-primary" (click)="open(mymodal)">
+        Add comment
+      </button>
+    </div>
+    <div class="col-lg-4" style="border: 2px solid black">
+      <div *ngFor="let item of commentList; let index = index">
+        {{ item }}
+      </div>
+      <ng-template #mymodal let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Add Comment</h4>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body" [formGroup]="videoFrom">
+          <input class="form-control" formControlName="comment" />
+          <div
+            style="color: red"
+            *ngIf="
+              videoFormControl.comment.touched &&
+              videoFormControl.comment.errors?.required
+            "
+          >
+            please provide comment
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="submit()">
+            Submit
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close('Save click')"
+          >
+            Close
+          </button>
+        </div>
+      </ng-template>
+    </div>
   </div>
-  <div class="col-lg-4"></div>
 </div>
 <br />

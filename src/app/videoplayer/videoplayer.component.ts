@@ -4,6 +4,8 @@ import { HttpService } from '../shared/http.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-videoplayer',
@@ -22,13 +24,20 @@ export class VideoplayerComponent implements OnInit {
   };
   Id: number;
   files: any[];
+  commentList: any = [];
+  videoFrom = {} as FormGroup;
   constructor(
     private authService: AuthService,
     private http: HttpClient,
     private httpService: HttpService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: NgbModal,
+    private formBuilder: FormBuilder
   ) {
+    this.videoFrom = this.formBuilder.group({
+      comment: ['', [Validators.required]],
+    });
     this.Id = this.route.snapshot.params.Id;
     this.videoArr = [];
     this.http
@@ -48,7 +57,30 @@ export class VideoplayerComponent implements OnInit {
         this.viewedArr.push(this.videoArr.filter((s) => s.id == this.Id)[0]);
       });
   }
-
+  closeResult: string;
+  open(content) {
+    // var myVideo: any = document.getElementById(event.target.id);
+    // if (myVideo.paused) myVideo.play();
+    this.modalService
+      .open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
   ngOnInit(): void {}
 
   videoRead(event) {
@@ -60,5 +92,15 @@ export class VideoplayerComponent implements OnInit {
     var myVideo: any = document.getElementById(event.target.id);
     if (myVideo.paused) myVideo.play();
     else myVideo.pause();
+  }
+  submit() {
+    if (this.videoFrom.valid) {
+      this.commentList.push(this.videoFrom.controls.comment.value);
+      this.modalService.dismissAll();
+      this.videoFrom.reset();
+    }
+  }
+  get videoFormControl() {
+    return this.videoFrom.controls;
   }
 }
