@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
     }
     if (localStorage.getItem('isLoggedIn') === 'true') {
       this.isUserLoggedIn = true;
-      //  this.router.navigateByUrl('/dashboard');
+      this.router.navigateByUrl('/dashboard');
     } else this.router.navigateByUrl('/login');
   }
 }
