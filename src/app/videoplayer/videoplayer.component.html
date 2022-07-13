@@ -7,14 +7,14 @@
         width="500"
         controls
         style="padding-left: 10px"
-        (click)="videoRead($event)"
+        (click)="videoRead($event, mymodal)"
       >
         <source src="{{ item.webUrl }}" type="video/mp4" />
         Your browser does not support HTML video.
       </video>
-      <button class="btn btn-lg btn-outline-primary" (click)="open(mymodal)">
+      <!-- <button class="btn btn-lg btn-outline-primary" (click)="open(mymodal)">
         Add comment
-      </button>
+      </button> -->
     </div>
     <div class="col-lg-4" style="border: 2px solid black">
       <div *ngFor="let item of commentList; let index = index">

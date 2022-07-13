@@ -58,16 +58,20 @@ export class VideoplayerComponent implements OnInit {
       });
   }
   closeResult: string;
-  open(content) {
-    // var myVideo: any = document.getElementById(event.target.id);
-    // if (myVideo.paused) myVideo.play();
+  open(content, id) {
+    var myVideo: any = document.getElementById(id);
+    myVideo.pause();
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(
         (result) => {
+          var myVideo: any = document.getElementById(id);
+          myVideo.pause();
           this.closeResult = `Closed with: ${result}`;
         },
         (reason) => {
+          var myVideo: any = document.getElementById(id);
+          myVideo.pause();
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         }
       );
@@ -83,15 +87,17 @@ export class VideoplayerComponent implements OnInit {
   }
   ngOnInit(): void {}
 
-  videoRead(event) {
+  videoRead(event, content) {
     if (this.viewedArr.filter((s) => s.id == event.target.id).length == 0) {
       this.viewedArr.push(
         this.videoArr.filter((s) => s.id == event.target.id)[0]
       );
     }
     var myVideo: any = document.getElementById(event.target.id);
-    if (myVideo.paused) myVideo.play();
-    else myVideo.pause();
+    // if (myVideo.play)
+    myVideo.pause();
+    this.open(content, event.target.id);
+    // else myVideo.pause();
   }
   submit() {
     if (this.videoFrom.valid) {
